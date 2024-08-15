@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+}
+
+enum Gender {
+  LAKI_LAKI
+  PEREMPUAN
+}
+
+enum StatusHunian {
+  KONTRAK
+  TETAP
+}
+
+model Penghuni {
+  id        Int               @id @default(autoincrement())
+  nama      String
+  fotoKTP   String
+  gender    Gender
+  noTelepon String
+  menikah   Boolean
+  rumah     PenghuniOnRumah[]
+}
+
+model Rumah {
+  id         Int               @id @default(autoincrement())
+  nomorRumah String            @unique
+  alamat     String
+  dihuni     Boolean           @default(false)
+  penghuni   PenghuniOnRumah[]
+}
+
+model JenisPembayaran {
+  id        Int            @id @default(autoincrement())
+  nama      String
+  deskripsi String
+  nominal   Int
+  iuran     IuranBulanan[]
+}
+
+enum PaymentFrequency {
+  BULANAN
+  TAHUNAN
+}
+
+model PenghuniOnRumah {
+  id               Int                @id @default(autoincrement())
+  penghuniId       Int
+  rumahId          Int
+  penghuni         Penghuni           @relation(fields: [penghuniId], references: [id])
+  rumah            Rumah              @relation(fields: [rumahId], references: [id])
+  mulai            DateTime?
+  selesai          DateTime?
+  statusHunian     StatusHunian
+  iuaran IuranBulanan[]
+}
+
+model IuranBulanan {
+  id                Int              @id @default(autoincrement())
+  penghuniId        Int
+  rumahId           Int
+  frekuensi         PaymentFrequency
+  penghuni          PenghuniOnRumah  @relation(fields: [penghuniId], references: [id])
+  tanggalBayar      DateTime
+  tanggalAkhirBayar DateTime?
+  nominal           Int
+  jenisPembayaranId Int
+  jenisPembayaran   JenisPembayaran  @relation(fields: [jenisPembayaranId], references: [id])
+}
