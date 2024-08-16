@@ -19,6 +19,7 @@ export const createPenghuni = async (req: Request, res: Response) => {
     const fotoKTP = req.file?.filename;
 
     if (!nama || !gender || !menikah || !noTelepon || !fotoKTP) {
+      console.log(fotoKTP);
       return res.sendStatus(400);
     }
 
@@ -90,7 +91,7 @@ export const updatePenghuni = async (req: Request, res: Response) => {
       data: {
         nama,
         gender,
-        menikah : menikah === "1",
+        menikah: menikah === "1",
         noTelepon,
         fotoKTP: fotoKTP,
       },
@@ -102,7 +103,6 @@ export const updatePenghuni = async (req: Request, res: Response) => {
     return res.sendStatus(500);
   }
 };
-
 
 export const deletePenghuni = async (req: Request, res: Response) => {
   try {
@@ -131,4 +131,4 @@ export const deletePenghuni = async (req: Request, res: Response) => {
     console.log("[DELETE_PENGHUNI] " + error);
     return res.sendStatus(500);
   }
-}
+};

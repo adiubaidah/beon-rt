@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { lazy, Suspense } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Wrapper from "./components/ready-use/wrapper";
+
+const Login = lazy(() => import("~/pages/login"));
+const Dashboard = lazy(() => import("~/pages/dashboard"));
+
+const Rumah = lazy(() => import("~/pages/rumah/rumah"));
+const Penghuni = lazy(() => import("~/pages/penghuni/penghuni"));
+const JenisIuran = lazy(() => import("~/pages/jenis-iuran/jenis-iuran"));
+
+// rumab > penghuni
+const PenghuniRumah = lazy(() => import("~/pages/rumah/penghuni/penghuni"));
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <BrowserRouter>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </Suspense>
+
+      <Wrapper>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="rumah">
+              <Route path="" element={<Rumah />} />
+              <Route path=":id/penghuni" element={<PenghuniRumah />} />
+            </Route>
+            <Route path="/penghuni" element={<Penghuni />} />
+            <Route path="/jenis-iuran" element={<JenisIuran />} />
+          </Routes>
+        </Suspense>
+      </Wrapper>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

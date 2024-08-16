@@ -3,6 +3,7 @@ import {
   createRumah,
   deleteRumah,
   getAllRumah,
+  getRumahById,
   updateRumah,
 } from "../controllers/rumah.controller";
 import { auth } from "../middleware";
@@ -10,5 +11,9 @@ import { auth } from "../middleware";
 export default (router: Router) => {
   router.route("/rumah").get(auth, getAllRumah).post(auth, createRumah);
 
-  router.route("/rumah/:id").put(auth, updateRumah).delete(auth, deleteRumah);
+  router
+    .route("/rumah/:id")
+    .get(auth, getRumahById)
+    .put(auth, updateRumah)
+    .delete(auth, deleteRumah);
 };

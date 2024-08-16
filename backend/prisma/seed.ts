@@ -18,7 +18,7 @@ async function main() {
   });
 
 
-  await prisma.jenisPembayaran.createMany({
+  await prisma.jenisIuran.createMany({
     data: [
       {
         nama: "Satpam",
@@ -33,7 +33,7 @@ async function main() {
     ],
   });
 
-  console.log("Seeded the database with an admin user and 2 jenis pembayaran");
+  console.log("Seeded the database with an admin user and 2 jenis iuran");
 }
 
 main()

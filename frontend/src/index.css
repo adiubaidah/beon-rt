@@ -59,6 +59,10 @@
   }
 }
 
+#root {
+  height: 100dvh; /* ✔️ Height specified - will fix issue */
+}
+
 @layer base {
   * {
     @apply border-border;

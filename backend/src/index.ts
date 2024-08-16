@@ -21,10 +21,10 @@ app.use(
 
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname,"/public")))
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use("/", routers())
+app.use("/public", express.static(path.join(__dirname, "../public")));
+app.use("/", routers());
 
 app.listen(PORT, () => {
   console.log("Server running in " + PORT);

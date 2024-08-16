@@ -37,44 +37,41 @@ model Rumah {
   id         Int               @id @default(autoincrement())
   nomorRumah String            @unique
   alamat     String
-  dihuni     Boolean           @default(false)
   penghuni   PenghuniOnRumah[]
 }
 
-model JenisPembayaran {
+model JenisIuran {
   id        Int            @id @default(autoincrement())
   nama      String
   deskripsi String
   nominal   Int
   iuran     IuranBulanan[]
-}
 
-enum PaymentFrequency {
-  BULANAN
-  TAHUNAN
+  @@map("jenis_iuran")
 }
 
 model PenghuniOnRumah {
-  id               Int                @id @default(autoincrement())
-  penghuniId       Int
-  rumahId          Int
-  penghuni         Penghuni           @relation(fields: [penghuniId], references: [id])
-  rumah            Rumah              @relation(fields: [rumahId], references: [id])
-  mulai            DateTime?
-  selesai          DateTime?
-  statusHunian     StatusHunian
-  iuaran IuranBulanan[]
+  id           Int            @id @default(autoincrement())
+  penghuniId   Int
+  rumahId      Int
+  penghuni     Penghuni       @relation(fields: [penghuniId], references: [id])
+  rumah        Rumah          @relation(fields: [rumahId], references: [id])
+  mulai        DateTime
+  selesai      DateTime?
+  statusHunian StatusHunian
+  iuaran       IuranBulanan[]
+
+  @@map("penghuni_on_rumah")
 }
 
 model IuranBulanan {
-  id                Int              @id @default(autoincrement())
-  penghuniId        Int
-  rumahId           Int
-  frekuensi         PaymentFrequency
-  penghuni          PenghuniOnRumah  @relation(fields: [penghuniId], references: [id])
+  id                Int             @id @default(autoincrement())
+  penghuniOnRumahId Int
+  penghuni          PenghuniOnRumah @relation(fields: [penghuniOnRumahId], references: [id])
   tanggalBayar      DateTime
-  tanggalAkhirBayar DateTime?
   nominal           Int
-  jenisPembayaranId Int
-  jenisPembayaran   JenisPembayaran  @relation(fields: [jenisPembayaranId], references: [id])
+  jenisIuranId      Int
+  jenisIuran        JenisIuran      @relation(fields: [jenisIuranId], references: [id])
+
+  @@map("iuran_bulanan")
 }
