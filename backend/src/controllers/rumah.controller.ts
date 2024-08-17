@@ -5,7 +5,7 @@ export const getAllRumah = async (req: Request, res: Response) => {
   try {
     const rumah = await prisma.$queryRawUnsafe(`
       SELECT
-        r.id as rumahId,
+        r.id,
         r.nomorRumah,
         r.alamat,
         p.id as penghuniId,

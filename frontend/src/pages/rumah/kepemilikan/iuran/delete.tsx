@@ -1,4 +1,5 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
@@ -10,36 +11,42 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
-import { axiosInstance } from "~/lib/utls";
+import { axiosInstance, dateFormat } from "~/lib/utls";
 import { Button } from "~/components/ui/button";
-import { ModalOperation, ModalProps, Penghuni } from "~/schema/type";
-function DeletePenghuni({
+import {
+  ModalOperation,
+  ModalProps,
+  IuranBulanan,
+} from "~/schema/type";
+function DeleteIuran({
   data,
   isOpen,
   operation,
   setIsOpen,
-}: ModalProps<ModalOperation, Penghuni>) {
+}: ModalProps<ModalOperation, IuranBulanan>) {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  const { kepemilikanId } = useParams();
+
+  const iuranMutation = useMutation({
     mutationKey: ["delete-mutation"],
     mutationFn: async () => {
-      return (await axiosInstance.delete("/penghuni/" + data.id)).data;
+      return (await axiosInstance.delete("/iuran-bulan/" + data.id)).data;
     },
     onSuccess: () => {
-      toast.success(`Penghuni berhasil dihapus`);
+      toast.success(`Iuran berhasil dihapus`);
       setIsOpen(false);
       queryClient.invalidateQueries({
-        queryKey: ["penghuni"],
+        queryKey: ["iuran-bulan", { kepemilikan: kepemilikanId }],
       });
     },
     onError: () => {
-      toast.error("Penghuni gagal dihapus");
+      toast.error("Iuran gagal dihapus");
     },
   });
 
   const handleDelete = () => {
-    mutation.mutate();
+    iuranMutation.mutate();
   };
   return (
     <AlertDialog
@@ -51,7 +58,8 @@ function DeletePenghuni({
           <AlertDialogTitle>Anda yakin ?</AlertDialogTitle>
           {data && data.id && (
             <AlertDialogDescription>
-              Anda akan menghapus {data.nama} ?
+              Anda akan menghapus transaksi tanggal{" "}
+              {dateFormat(data.tanggalBayar.toString())}
             </AlertDialogDescription>
           )}
         </AlertDialogHeader>
@@ -67,11 +75,11 @@ function DeletePenghuni({
 
           <Button
             type="submit"
-            disabled={mutation.isPending}
+            disabled={iuranMutation.isPending}
             variant={"destructive"}
             onClick={handleDelete}
           >
-            {mutation.isPending ? (
+            {iuranMutation.isPending ? (
               <React.Fragment>
                 <Loader2 className="animate-spin" />
                 Menghapus
@@ -86,4 +94,4 @@ function DeletePenghuni({
   );
 }
 
-export default DeletePenghuni;
+export default DeleteIuran;

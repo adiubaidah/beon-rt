@@ -1,4 +1,5 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
@@ -10,36 +11,38 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
-import { axiosInstance } from "~/lib/utls";
+import { axiosInstance, dateFormat } from "~/lib/utls";
 import { Button } from "~/components/ui/button";
-import { ModalOperation, ModalProps, Penghuni } from "~/schema/type";
-function DeletePenghuni({
+import { ModalOperation, ModalProps, Kepemilikan } from "~/schema/type";
+function DeleteKepemilikan({
   data,
   isOpen,
   operation,
   setIsOpen,
-}: ModalProps<ModalOperation, Penghuni>) {
+}: ModalProps<ModalOperation, Kepemilikan>) {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  const { id: rumahId } = useParams();
+
+  const kepemilikanMutation = useMutation({
     mutationKey: ["delete-mutation"],
     mutationFn: async () => {
-      return (await axiosInstance.delete("/penghuni/" + data.id)).data;
+      return (await axiosInstance.delete("/kepemilikan/" + data.id)).data;
     },
     onSuccess: () => {
-      toast.success(`Penghuni berhasil dihapus`);
+      toast.success(`Kepemilikan berhasil dihapus`);
       setIsOpen(false);
       queryClient.invalidateQueries({
-        queryKey: ["penghuni"],
+        queryKey: ["kepemilikan", { rumah: rumahId }],
       });
     },
     onError: () => {
-      toast.error("Penghuni gagal dihapus");
+      toast.error("Kepemilikan gagal dihapus");
     },
   });
 
   const handleDelete = () => {
-    mutation.mutate();
+    kepemilikanMutation.mutate();
   };
   return (
     <AlertDialog
@@ -51,7 +54,7 @@ function DeletePenghuni({
           <AlertDialogTitle>Anda yakin ?</AlertDialogTitle>
           {data && data.id && (
             <AlertDialogDescription>
-              Anda akan menghapus {data.nama} ?
+              Anda akan menghapus kepemilikan ini ?
             </AlertDialogDescription>
           )}
         </AlertDialogHeader>
@@ -67,11 +70,11 @@ function DeletePenghuni({
 
           <Button
             type="submit"
-            disabled={mutation.isPending}
+            disabled={kepemilikanMutation.isPending}
             variant={"destructive"}
             onClick={handleDelete}
           >
-            {mutation.isPending ? (
+            {kepemilikanMutation.isPending ? (
               <React.Fragment>
                 <Loader2 className="animate-spin" />
                 Menghapus
@@ -86,4 +89,4 @@ function DeletePenghuni({
   );
 }
 
-export default DeletePenghuni;
+export default DeleteKepemilikan;

@@ -20,7 +20,13 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
 } from "~/components/ui/dropdown-menu";
-import { ModalOperation, JenisIuran as JenisIuranType } from "~/schema/type";
+import {
+  ModalOperation,
+  JenisIuran as JenisIuranType,
+  NewJenisIuran,
+} from "~/schema/type";
+import AddJenisIuran from "./add";
+import DeleteJenisIuran from "./delete";
 
 type DataModal = {
   data?: JenisIuranType;
@@ -117,6 +123,19 @@ function JenisIuran() {
           )}
         </TableBody>
       </Table>
+
+      <AddJenisIuran
+        data={dataModal.data as NewJenisIuran}
+        isOpen={openModal}
+        setIsOpen={setOpenModal}
+        operation={dataModal.operation}
+      />
+      <DeleteJenisIuran
+        data={dataModal.data as JenisIuranType}
+        isOpen={openModal}
+        setIsOpen={setOpenModal}
+        operation={dataModal.operation}
+      />
     </div>
   );
 }

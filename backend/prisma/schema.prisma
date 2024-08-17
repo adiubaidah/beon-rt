@@ -54,8 +54,8 @@ model PenghuniOnRumah {
   id           Int            @id @default(autoincrement())
   penghuniId   Int
   rumahId      Int
-  penghuni     Penghuni       @relation(fields: [penghuniId], references: [id])
-  rumah        Rumah          @relation(fields: [rumahId], references: [id])
+  penghuni     Penghuni       @relation(fields: [penghuniId], references: [id], onDelete: Cascade)
+  rumah        Rumah          @relation(fields: [rumahId], references: [id], onDelete: Cascade)
   mulai        DateTime
   selesai      DateTime?
   statusHunian StatusHunian
@@ -67,11 +67,20 @@ model PenghuniOnRumah {
 model IuranBulanan {
   id                Int             @id @default(autoincrement())
   penghuniOnRumahId Int
-  penghuni          PenghuniOnRumah @relation(fields: [penghuniOnRumahId], references: [id])
+  penghuni          PenghuniOnRumah @relation(fields: [penghuniOnRumahId], references: [id], onDelete:Cascade)
   tanggalBayar      DateTime
   nominal           Int
   jenisIuranId      Int
-  jenisIuran        JenisIuran      @relation(fields: [jenisIuranId], references: [id])
+  jenisIuran        JenisIuran      @relation(fields: [jenisIuranId], references: [id], onDelete: Cascade)
 
   @@map("iuran_bulanan")
+}
+
+
+model Pengeluaran {
+  id          Int      @id @default(autoincrement())
+  nama        String
+  nominal     Int
+  tanggal     DateTime
+  keterangan  String?
 }

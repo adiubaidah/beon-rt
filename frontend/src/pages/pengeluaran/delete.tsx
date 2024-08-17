@@ -12,29 +12,29 @@ import {
 } from "~/components/ui/alert-dialog";
 import { axiosInstance } from "~/lib/utls";
 import { Button } from "~/components/ui/button";
-import { ModalOperation, ModalProps, Penghuni } from "~/schema/type";
-function DeletePenghuni({
+import { ModalOperation, ModalProps, Pengeluaran } from "~/schema/type";
+function DeletePengeluaran({
   data,
   isOpen,
   operation,
   setIsOpen,
-}: ModalProps<ModalOperation, Penghuni>) {
+}: ModalProps<ModalOperation, Pengeluaran>) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationKey: ["delete-mutation"],
     mutationFn: async () => {
-      return (await axiosInstance.delete("/penghuni/" + data.id)).data;
+      return (await axiosInstance.delete("/pengeluaran/" + data.id)).data;
     },
     onSuccess: () => {
-      toast.success(`Penghuni berhasil dihapus`);
+      toast.success(`Pengeluaran berhasil dihapus`);
       setIsOpen(false);
       queryClient.invalidateQueries({
-        queryKey: ["penghuni"],
+        queryKey: ["pengeluaran"],
       });
     },
     onError: () => {
-      toast.error("Penghuni gagal dihapus");
+      toast.error("Pengeluaran gagal dihapus");
     },
   });
 
@@ -51,7 +51,7 @@ function DeletePenghuni({
           <AlertDialogTitle>Anda yakin ?</AlertDialogTitle>
           {data && data.id && (
             <AlertDialogDescription>
-              Anda akan menghapus {data.nama} ?
+              Anda akan menghapus pengeluaran ini ?
             </AlertDialogDescription>
           )}
         </AlertDialogHeader>
@@ -86,4 +86,4 @@ function DeletePenghuni({
   );
 }
 
-export default DeletePenghuni;
+export default DeletePengeluaran;

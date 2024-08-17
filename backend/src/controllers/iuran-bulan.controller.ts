@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
-import { prisma } from "../lib/prisma";
 import { Prisma } from "@prisma/client";
+import { prisma } from "../lib/prisma";
+import { months } from "../constant";
 
 export const getAllIuranBulan = async (req: Request, res: Response) => {
   try {
-    const { from, to, q, iuran } = req.query;
+    const { from, to, q, iuran, kepemilikan, penghuni, rumah } = req.query;
 
     const query: Prisma.IuranBulananWhereInput = {
       ...(from && {
@@ -20,6 +21,9 @@ export const getAllIuranBulan = async (req: Request, res: Response) => {
           },
         },
       }),
+      ...(kepemilikan && {
+        penghuniOnRumahId: parseInt(kepemilikan.toString()),
+      }),
     };
 
     if (q) {
@@ -34,14 +38,57 @@ export const getAllIuranBulan = async (req: Request, res: Response) => {
 
     const iuranBulan = await prisma.iuranBulanan.findMany({
       where: query,
+      include: {
+        jenisIuran: true,
+        ...(penghuni === "1" && {
+          penghuni: {
+            include: {
+              penghuni: true,
+              rumah: rumah === "1",
+            },
+          },
+        }),
+      },
       orderBy: {
         tanggalBayar: "desc",
-      }
+      },
     });
-    
+
     return res.status(200).json(iuranBulan);
   } catch (error) {
     console.log("[GET_IURANBULAN] " + error);
+    return res.sendStatus(500);
+  }
+};
+
+export const rekapIuranBulanTahun = async (req: Request, res: Response) => {
+  try {
+    const tahun = req.query.tahun || new Date().getFullYear();
+
+    const iuranBulan: any = await prisma.$queryRawUnsafe(`
+      SELECT
+        MONTH(tanggalBayar) AS month,
+        SUM(nominal) AS total_nominal
+    FROM
+      iuran_bulanan
+    WHERE
+        YEAR(tanggalBayar) = ${tahun}
+    GROUP BY
+        MONTH(tanggalBayar)
+    ORDER BY
+        month;
+      `);
+    const rekap = months.map((month: any, index) => {
+      const data = iuranBulan.find((item: any) => item.month === index + 1);
+      return {
+        month,
+        total_nominal: data ? Number(data.total_nominal) : 0,
+      };
+    });
+
+    return res.status(200).json(rekap);
+  } catch (error) {
+    console.log("[REKAP_IURANBULAN] " + error);
     return res.sendStatus(500);
   }
 };
@@ -70,17 +117,19 @@ export const createIuranBulan = async (req: Request, res: Response) => {
     if (setahun) {
       //create many but with different month
       let iuranBulanArr = [];
-      for (let i = 1; i <= 12; i++) {
-        let newTanggalBayar = new Date(tanggalBayar);
-        newTanggalBayar.setMonth(i);
+      let newTanggalBayar = new Date(tanggalBayar);
 
+      for (let i = 0; i < 12; i++) {
         iuranBulanArr.push({
           nominal: getJenisPembayaran.nominal,
-          tanggalBayar: newTanggalBayar,
+          tanggalBayar: new Date(newTanggalBayar), // clone date to avoid mutation issues
           penghuniOnRumahId,
           jenisIuranId,
         });
+
+        newTanggalBayar.setMonth(newTanggalBayar.getMonth() + 1);
       }
+
       iuranBulan = await prisma.iuranBulanan.createMany({
         data: iuranBulanArr,
       });
@@ -106,6 +155,63 @@ export const createIuranBulan = async (req: Request, res: Response) => {
     return res.status(201).json(iuranBulan);
   } catch (error) {
     console.log("[CREATE_IURANBULAN] " + error);
+    return res.sendStatus(500);
+  }
+};
+
+export const updateIuranBulan = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { tanggalBayar, penghuniOnRumahId, jenisIuranId } = req.body;
+
+    if (!tanggalBayar || !penghuniOnRumahId || !jenisIuranId) {
+      return res.sendStatus(400);
+    }
+
+    const findJenisIuran = await prisma.jenisIuran.findUnique({
+      where: {
+        id: jenisIuranId,
+      },
+    });
+
+    if (!findJenisIuran) {
+      return res
+        .status(400)
+        .json({ message: "Jenis Pembayaran tidak ditemukan" });
+    }
+
+    const iuranBulan = await prisma.iuranBulanan.update({
+      where: {
+        id: parseInt(id),
+      },
+      data: {
+        nominal: findJenisIuran.nominal,
+        tanggalBayar,
+        penghuniOnRumahId,
+        jenisIuranId,
+      },
+    });
+
+    return res.status(200).json(iuranBulan);
+  } catch (error) {
+    console.log("[UPDATE_IURANBULAN] " + error);
+    return res.sendStatus(500);
+  }
+};
+
+export const deleteIuranBulan = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const iuranBulan = await prisma.iuranBulanan.delete({
+      where: {
+        id: parseInt(id),
+      },
+    });
+
+    return res.status(200).json(iuranBulan);
+  } catch (error) {
+    console.log("[DELETE_IURANBULAN] " + error);
     return res.sendStatus(500);
   }
 };

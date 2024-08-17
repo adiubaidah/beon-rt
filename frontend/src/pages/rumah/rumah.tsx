@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { MoreHorizontal, History } from "lucide-react";
+import { MoreHorizontal, History, Pencil, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Table,
@@ -24,6 +24,8 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { ModalOperation, NewRumah, Rumah as RumahType } from "~/schema/type";
 import AddRumah from "./add";
+import EditRumah from "./edit";
+import DeleteRumah from "./delete";
 
 type DataModal = {
   data?: RumahType;
@@ -46,6 +48,7 @@ function Rumah() {
       <h1>Daftar Rumah</h1>
       <div className="float-right">
         <Button
+          variant={"outline"}
           onClick={() => {
             setOpenModal(true);
             setDataModal({ operation: "create" });
@@ -54,7 +57,7 @@ function Rumah() {
           Tambah Rumah
         </Button>
       </div>
-      <Table>
+      <Table className="mt-4">
         <TableHeader>
           <TableRow>
             <TableHead>NO</TableHead>
@@ -69,15 +72,27 @@ function Rumah() {
         <TableBody>
           {isLoading
             ? () => <TableCell>Loading...</TableCell>
-            : data.map((rumah: any, index: number) => (
+            : data.map((rumah: any) => (
                 <TableRow>
                   <TableCell>{rumah.nomorRumah}</TableCell>
                   <TableCell>{rumah.alamat}</TableCell>
                   <TableCell>{rumah.namaPenghuni}</TableCell>
                   <TableCell>{rumah.statusHunian}</TableCell>
                   <TableCell>
-                    <Badge variant={rumah.isLunas === '1' ? "default" : "destructive"}>
-                      {rumah.isLunas === '1' ? "Lunas" : "Belum Lunas"}
+                    <Badge
+                      variant={
+                        rumah.isLunas === "1"
+                          ? "default"
+                          : rumah.isLunas === "0"
+                          ? "destructive"
+                          : "secondary"
+                      }
+                    >
+                      {rumah.isLunas === "1"
+                        ? "Lunas"
+                        : rumah.isLunas === "0"
+                        ? "Belum Lunas"
+                        : "N/A"}
                     </Badge>
                   </TableCell>
                   <TableCell>
@@ -92,12 +107,32 @@ function Rumah() {
                         <DropdownMenuLabel>Aksi</DropdownMenuLabel>
                         <DropdownMenuItem asChild>
                           <Link
-                            to={`/rumah/${rumah.rumahId}/penghuni`}
+                            to={`/rumah/${rumah.id}/kepemilikan`}
                             className="cursor-pointer"
                           >
                             <History className="w-5 h-5 mr-2" />
                             <span>History Penghuni</span>
                           </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="flex items-center gap-x-3 cursor-pointer"
+                          onClick={() => {
+                            setOpenModal(true);
+                            setDataModal({ data: rumah, operation: "update" });
+                          }}
+                        >
+                          <Pencil size={16} color="orange" />
+                          <span>Edit</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="flex items-center gap-x-3 cursor-pointer"
+                          onClick={() => {
+                            setOpenModal(true);
+                            setDataModal({ data: rumah, operation: "delete" });
+                          }}
+                        >
+                          <Trash2 size={16} color="red" />
+                          <span>Hapus</span>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -110,6 +145,18 @@ function Rumah() {
       {/* Modal */}
       <AddRumah
         data={dataModal.data as NewRumah}
+        isOpen={openModal}
+        setIsOpen={setOpenModal}
+        operation={dataModal.operation}
+      />
+      <EditRumah
+        data={dataModal.data as RumahType}
+        isOpen={openModal}
+        setIsOpen={setOpenModal}
+        operation={dataModal.operation}
+      />
+      <DeleteRumah
+        data={dataModal.data as RumahType}
         isOpen={openModal}
         setIsOpen={setOpenModal}
         operation={dataModal.operation}

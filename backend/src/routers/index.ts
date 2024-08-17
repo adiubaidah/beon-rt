@@ -5,6 +5,7 @@ import rumahRouter from "./rumah.router";
 import kepemilikanRouter from "./kepemilikan.router";
 import iuranbulanRouter from "./iuran-bulan.router";
 import jenisIuranRouter from "./jenis-iuran.router";
+import pengeluaranRouter from "./pengeluaran.router";
 
 const router = Router();
 
@@ -15,5 +16,6 @@ export default (): Router => {
   kepemilikanRouter(router);
   iuranbulanRouter(router);
   jenisIuranRouter(router);
+  pengeluaranRouter(router);
   return router;
 };

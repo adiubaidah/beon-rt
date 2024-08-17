@@ -12,7 +12,7 @@ export const getAllKepemilikan = async (req: Request, res: Response) => {
       where["statusHunian"] = kontrak;
     }
 
-    if(rumah) {
+    if (rumah) {
       where["rumahId"] = rumah;
     }
 
@@ -23,7 +23,7 @@ export const getAllKepemilikan = async (req: Request, res: Response) => {
     p.id as penghuniId,
     p.nama as namaPenghuni,
     p.noTelepon,
-    pr.id as penghuniOnRumahId,
+    pr.id,
     pr.statusHunian,
     pr.mulai,
     pr.selesai,
@@ -61,7 +61,7 @@ FROM
     LEFT JOIN penghuni_on_rumah as pr ON r.id = pr.rumahId
     LEFT JOIN penghuni as p ON pr.penghuniId = p.id`;
 
-    if(Object.keys(where).length > 0) {
+    if (Object.keys(where).length > 0) {
       queryString += " WHERE ";
       let i = 0;
       for (const key in where) {
@@ -133,6 +133,67 @@ export const createKepemilikan = async (req: Request, res: Response) => {
     return res.status(201).json(kepemilikan);
   } catch (error) {
     console.log("[CREATE_PENGHUNI] " + error);
+    return res.sendStatus(500);
+  }
+};
+
+export const updateKepemilikan = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { rumahId, penghuniId, statusHunian, mulai, selesai } = req.body;
+
+    if (
+      !rumahId ||
+      !penghuniId ||
+      !statusHunian ||
+      !mulai ||
+      (statusHunian === "KONTRAK" && !selesai)
+    ) {
+      return res.sendStatus(400);
+    }
+
+    const kepemilikan = await prisma.penghuniOnRumah.update({
+      where: {
+        id: parseInt(id),
+      },
+      data: {
+        mulai,
+        ...(statusHunian === "KONTRAK" && {
+          selesai,
+        }),
+        rumah: {
+          connect: {
+            id: rumahId,
+          },
+        },
+        penghuni: {
+          connect: {
+            id: penghuniId,
+          },
+        },
+        statusHunian,
+      },
+    });
+
+    return res.status(200).json(kepemilikan);
+  } catch (error) {
+    console.log("[UPDATE_PENGHUNI] " + error);
+    return res.sendStatus(500);
+  }
+};
+
+export const deleteKepemilikan = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    await prisma.penghuniOnRumah.delete({
+      where: {
+        id: parseInt(id),
+      },
+    });
+
+    return res.sendStatus(200);
+  } catch (error) {
+    console.log("[DELETE_PENGHUNI] " + error);
     return res.sendStatus(500);
   }
 };

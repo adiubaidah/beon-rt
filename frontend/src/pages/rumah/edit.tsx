@@ -2,6 +2,7 @@ import toast from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { PlusSquare } from "lucide-react";
 
 import {
   Dialog,
@@ -22,18 +23,19 @@ import {
 import { Textarea } from "~/components/ui/textarea";
 
 import { rumahSchema } from "~/schema";
-import { ModalOperation, ModalProps, NewRumah } from "~/schema/type";
+import { ModalOperation, ModalProps, NewRumah, Rumah } from "~/schema/type";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { axiosInstance } from "~/lib/utls";
+import { useEffect } from "react";
 
-function AddRumah({
+function EditRumah({
   data,
   isOpen,
   setIsOpen,
   operation,
-}: ModalProps<ModalOperation, NewRumah>) {
+}: ModalProps<ModalOperation, Rumah>) {
   const queryClient = useQueryClient();
 
   const form = useForm<NewRumah>({
@@ -44,17 +46,24 @@ function AddRumah({
     },
   });
 
+  useEffect(() => {
+    if (data) {
+        form.setValue("nomorRumah", data.nomorRumah);
+        form.setValue("alamat", data.alamat);
+    }
+  }, [data]);
+
   const rumahMutation = useMutation({
     mutationFn: async (value: NewRumah) => {
-      return (await axiosInstance.post("/rumah", value)).data;
+      return (await axiosInstance.put("/rumah/" + data.id, value)).data;
     },
     onSuccess: (payload) => {
-      toast.success(`Rumah ${payload.nomorRumah} berhasil ditambahkan`);
+      toast.success(`Rumah ${payload.nomorRumah} berhasil diedit`);
       setIsOpen(false);
       queryClient.invalidateQueries({ queryKey: ["rumah"] });
     },
     onError: () => {
-      toast.error("Rumah gagal ditambahkan");
+      toast.error("Rumah gagal diedit");
     },
   });
 
@@ -63,7 +72,7 @@ function AddRumah({
   }
   return (
     <Dialog
-      open={isOpen && operation === "create"}
+      open={isOpen && operation === "update"}
       onOpenChange={() => {
         form.reset();
         setIsOpen(!isOpen);
@@ -71,7 +80,7 @@ function AddRumah({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Tambah Rumah</DialogTitle>
+          <DialogTitle>Edit Rumah</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -113,4 +122,4 @@ function AddRumah({
   );
 }
 
-export default AddRumah;
+export default EditRumah;

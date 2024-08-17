@@ -8,6 +8,8 @@ import {
   Power,
   UserRound,
   WalletCards,
+  ArrowUpFromDot,
+  ArrowDownToDot,
 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 
@@ -45,6 +47,16 @@ function Sidebar({ toggled, setToggled, setBroken }: SidebarProps) {
       link: "/dashboard",
       label: "Dashboard",
       icon: <LayoutDashboard size={20} />,
+    },
+    {
+      link: "/pengeluaran",
+      label: "Pengeluaran",
+      icon: <ArrowUpFromDot size={20} />,
+    },
+    {
+      link: "/pemasukan",
+      label: "Pemasukan",
+      icon: <ArrowDownToDot size={20} />,
     },
     {
       link: "/rumah",

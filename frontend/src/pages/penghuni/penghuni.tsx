@@ -10,13 +10,11 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
 import { axiosInstance, imageFromBackend } from "~/lib/utls";
+
 import {
   DropdownMenu,
   DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
-import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -28,6 +26,7 @@ import {
 } from "~/schema/type";
 import AddPenghuni from "./add";
 import EditPenghuni from "./edit";
+import DeletePenghuni from "./delete";
 
 type DataModal = {
   data?: PenghuniType;
@@ -47,9 +46,10 @@ function Penghuni() {
   });
   return (
     <div>
-      <h1>Daftar Penghuni</h1>
+      <h1 className="text-2xl font-bold">Daftar Penghuni</h1>
       <div className="float-right">
         <Button
+          variant={'outline'}
           onClick={() => {
             setOpenModal(true);
             setDataModal({ operation: "create" });
@@ -58,7 +58,7 @@ function Penghuni() {
           Tambah Penghuni
         </Button>
       </div>
-      <Table>
+      <Table className="mt-4">
         <TableHeader>
           <TableRow>
             <TableHead>NO</TableHead>
@@ -129,6 +129,13 @@ function Penghuni() {
       {/* Modal */}
       <AddPenghuni
         data={dataModal.data as NewPenghuni}
+        isOpen={openModal}
+        setIsOpen={setOpenModal}
+        operation={dataModal.operation}
+      />
+
+      <DeletePenghuni
+        data={dataModal.data as PenghuniType}
         isOpen={openModal}
         setIsOpen={setOpenModal}
         operation={dataModal.operation}
