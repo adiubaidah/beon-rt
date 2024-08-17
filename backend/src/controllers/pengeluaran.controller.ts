@@ -69,6 +69,28 @@ export const createPengeluaran = async (req: Request, res: Response) => {
       return res.sendStatus(400);
     }
 
+    //check if nominal < (sum of iuran_bulanan - sum of pengeluaran)
+    const totalIuranBulanan = await prisma.iuranBulanan.aggregate({
+      _sum: {
+        nominal: true,
+      },
+    });
+    const totalPengeluaran = await prisma.pengeluaran.aggregate({
+      _sum: {
+        nominal: true,
+      },
+    });
+
+    if (
+      totalIuranBulanan._sum?.nominal !== null &&
+      totalIuranBulanan._sum?.nominal <
+      (totalPengeluaran._sum?.nominal || 0) + nominal
+    ) {
+      return res.status(400).json({
+        message: "Nominal pengeluaran melebihi total iuran bulanan",
+      });
+    }
+
     const pengeluaran = await prisma.pengeluaran.create({
       data: {
         nama,

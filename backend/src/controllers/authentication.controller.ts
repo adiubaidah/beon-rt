@@ -81,15 +81,14 @@ export const register = async (req: Request, res: Response) => {
 
 export const logout = (req: Request, res: Response) => {
   return res
-    .clearCookie("access_token", {
-      domain: process.env.DOMAIN,
-      sameSite: "none",
+    .cookie("access_token", "", {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      expires: new Date(0),
       path: "/",
-      secure: true,
-      httpOnly: true,
     })
     .status(200)
-    .send({ message: "Successfully logged out" });
+    .send({ message: "Logout success" });
 };
 
 interface UserPayload extends JwtPayload {

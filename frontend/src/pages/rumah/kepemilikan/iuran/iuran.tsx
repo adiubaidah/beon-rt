@@ -69,6 +69,7 @@ function Iuran() {
 
       <ul>
         <li>Iuran kontrak dibayar harus antara mulai mengontrak dan selesai</li>
+        <li>Iuran harus melunasi semua jenis iuran</li>
       </ul>
 
       <div className="flex items-center justify-between mt-3">

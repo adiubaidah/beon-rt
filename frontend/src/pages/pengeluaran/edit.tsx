@@ -98,7 +98,7 @@ function EditPengeluaran({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Tambah Penghuni</DialogTitle>
+          <DialogTitle>Edit Pengeluaran</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -112,7 +112,7 @@ function EditPengeluaran({
                 <FormItem>
                   <FormLabel>Nama</FormLabel>
                   <FormControl>
-                    <Input placeholder="Wakimin" {...field} />
+                    <Input placeholder="Listrik" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

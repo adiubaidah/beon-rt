@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Wrapper from "./components/ready-use/wrapper";
+import ProtectedRoute from "./components/ready-use/protected-route";
 
 const Login = lazy(() => import("~/pages/login"));
 const Dashboard = lazy(() => import("~/pages/dashboard"));
@@ -28,21 +29,22 @@ function App() {
       <Wrapper>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-            <Route path="/login" element={<Login />} />
-
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="rumah">
-              <Route path="" element={<Rumah />} />
-              <Route path=":id/kepemilikan" element={<Kepemilikan />} />
-              <Route
-                path=":id/kepemilikan/:kepemilikanId/iuran"
-                element={<Iuran />}
-              />
+            <Route element={<ProtectedRoute redirectPath="/login" />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="rumah">
+                <Route path="" element={<Rumah />} />
+                <Route path=":id/kepemilikan" element={<Kepemilikan />} />
+                <Route
+                  path=":id/kepemilikan/:kepemilikanId/iuran"
+                  element={<Iuran />}
+                />
+              </Route>
+              <Route path="/penghuni" element={<Penghuni />} />
+              <Route path="/jenis-iuran" element={<JenisIuran />} />
+              <Route path="/pengeluaran" element={<Pengeluaran />} />
+              <Route path="/pemasukan" element={<Pemasukan />} />
             </Route>
-            <Route path="/penghuni" element={<Penghuni />} />
-            <Route path="/jenis-iuran" element={<JenisIuran />} />
-            <Route path="/pengeluaran" element={<Pengeluaran />} />
-            <Route path="/pemasukan" element={<Pemasukan />} />
           </Routes>
         </Suspense>
       </Wrapper>

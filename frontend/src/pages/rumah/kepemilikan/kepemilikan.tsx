@@ -45,6 +45,7 @@ function Kepemilikan() {
         await axiosInstance.get("/kepemilikan", { params: { rumah: id } })
       ).data;
     },
+    refetchOnMount: true,
     enabled: !!id,
   });
 
@@ -60,6 +61,7 @@ function Kepemilikan() {
           Jika penghuni adalah <strong>Tetap</strong>, maka harus membayar mulai
           dari dia menetap hingga bulan saat ini
         </li>
+        <li>Terkadang halaman ini tidak ter-refresh, maka harus refresh manual</li>
       </ul>
       <div className="float-right">
         <Button
@@ -126,7 +128,7 @@ function Kepemilikan() {
                       <DropdownMenuLabel>Aksi</DropdownMenuLabel>
                       <DropdownMenuItem asChild>
                         <Link
-                          to={`/rumah/${id}/kepemilikan/${item.penghuniId}/iuran`}
+                          to={`/rumah/${id}/kepemilikan/${item.id}/iuran`}
                           className="flex items-center gap-x-3 cursor-pointer"
                         >
                           <Calculator size={16} color="orange" />

@@ -196,7 +196,7 @@ function ChartComponent() {
           </Select>
         </div>
       </div>
-      <div className="w-3/4">
+      <div className="w-full md:w-3/4">
         {isLoadingPemasukan || isLoadingPengeluaran ? (
           <Loader2 />
         ) : (

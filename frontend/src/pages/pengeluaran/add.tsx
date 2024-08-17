@@ -81,7 +81,7 @@ function AddPengeluaran({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Tambah Penghuni</DialogTitle>
+          <DialogTitle>Tambah Pengeluaran</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -95,7 +95,7 @@ function AddPengeluaran({
                 <FormItem>
                   <FormLabel>Nama</FormLabel>
                   <FormControl>
-                    <Input placeholder="Wakimin" {...field} />
+                    <Input placeholder="Listrik" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

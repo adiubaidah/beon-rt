@@ -111,6 +111,9 @@ function EditKepemilikan({
       queryClient.invalidateQueries({
         queryKey: ["kepemilikan", { rumah: rumahId }],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["rumah"],
+      });
     },
     onError: () => {
       toast.error("Kepemilikan gagal ditambahkan");

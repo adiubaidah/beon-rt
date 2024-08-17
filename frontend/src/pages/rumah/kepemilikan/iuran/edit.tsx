@@ -58,7 +58,7 @@ function EditIuran({
   operation,
 }: ModalProps<ModalOperation, IuranBulanan>) {
   const queryClient = useQueryClient();
-  const { kepemilikanId } = useParams();
+  const { kepemilikanId, id: rumahId } = useParams();
 
   const form = useForm<NewIuranBulanan>({
     resolver: zodResolver(iuranBulananSchema),
@@ -99,6 +99,12 @@ function EditIuran({
       setIsOpen(false);
       queryClient.invalidateQueries({
         queryKey: ["iuran-bulan", { kepemilikan: kepemilikanId }],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["kepemilikan", { rumahId }],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["rumah"],
       });
     },
     onError: () => {

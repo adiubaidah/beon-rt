@@ -26,7 +26,7 @@ function DeleteIuran({
 }: ModalProps<ModalOperation, IuranBulanan>) {
   const queryClient = useQueryClient();
 
-  const { kepemilikanId } = useParams();
+  const { kepemilikanId, id: rumahId } = useParams();
 
   const iuranMutation = useMutation({
     mutationKey: ["delete-mutation"],
@@ -39,6 +39,12 @@ function DeleteIuran({
       queryClient.invalidateQueries({
         queryKey: ["iuran-bulan", { kepemilikan: kepemilikanId }],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["kepemilikan", { rumahId }],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["rumah"],
+      })
     },
     onError: () => {
       toast.error("Iuran gagal dihapus");
