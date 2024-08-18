@@ -58,7 +58,7 @@ function EditJenisIuran({
 
   const mutation = useMutation({
     mutationFn: async (value: NewJenisIuran) => {
-      return (await axiosInstance.post("/jenis-iuran", value)).data;
+      return (await axiosInstance.put("/jenis-iuran/" + data.id, value)).data;
     },
     onSuccess: () => {
       toast.success(`Jenis iuran berhasil ditambahkan`);
@@ -76,7 +76,7 @@ function EditJenisIuran({
 
   return (
     <Dialog
-      open={isOpen && operation === "create"}
+      open={isOpen && operation === "update"}
       onOpenChange={() => {
         form.reset();
         setIsOpen(!isOpen);

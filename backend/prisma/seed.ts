@@ -47,7 +47,6 @@ async function main() {
     data: penghuniData,
   });
   const rumah = Array.from({ length: 20 }).map((item, index) => ({
-    //generate random number 5 digits
     nomorRumah: Math.floor(10000 + Math.random() * 90000).toString(),
     alamat: faker.location.streetAddress(),
   }));

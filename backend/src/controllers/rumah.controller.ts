@@ -4,57 +4,32 @@ import { prisma } from "../lib/prisma";
 export const getAllRumah = async (req: Request, res: Response) => {
   try {
     const rumah = await prisma.$queryRawUnsafe(`
-      SELECT
-        r.id,
-        r.nomorRumah,
-        r.alamat,
-        p.id as penghuniId,
-        p.nama as namaPenghuni,
-        pr.statusHunian,
-        pr.mulai,
-        pr.selesai,
-        CASE
-            WHEN pr.statusHunian = 'KONTRAK' THEN
-                CASE
-                    WHEN NOT EXISTS (
-                        SELECT 1
-                        FROM jenis_iuran ji
-                        LEFT JOIN iuran_bulanan ib ON ji.id = ib.jenisIuranId
-                        AND ib.penghuniOnRumahId = pr.id
-                        AND ib.tanggalBayar BETWEEN pr.mulai AND pr.selesai
-                        AND ib.nominal > 0
-                        WHERE ib.jenisIuranId IS NULL
-                    ) THEN 1
-                    ELSE 0
-                END
-            WHEN pr.statusHunian = 'TETAP' THEN
-                CASE
-                    WHEN NOT EXISTS (
-                        SELECT 1
-                        FROM jenis_iuran ji
-                        LEFT JOIN iuran_bulanan ib ON ji.id = ib.jenisIuranId
-                        AND ib.penghuniOnRumahId = pr.id
-                        AND ib.tanggalBayar >= pr.mulai
-                        AND ib.nominal > 0
-                        WHERE ib.jenisIuranId IS NULL
-                    ) THEN 1
-                    ELSE 0
-                END
-            ELSE 'N/A'
-        END as isLunas
-    FROM
-        rumah as r
-        LEFT JOIN (
-            SELECT *
-            FROM penghuni_on_rumah
-            WHERE (rumahId, mulai) IN (
-                SELECT rumahId, MAX(mulai)
-                FROM penghuni_on_rumah
-                GROUP BY rumahId
+     SELECT
+    r.id,
+    r.nomorRumah,
+    r.alamat,
+    p.nama as namaPenghuni,
+    pr.statusHunian,
+    pr.menghuni
+FROM
+    rumah AS r
+    LEFT JOIN (
+        SELECT
+            *
+        FROM
+            penghuni_on_rumah
+        WHERE
+            (rumahId, mulai) IN (
+                SELECT
+                    rumahId,
+                    MAX(mulai)
+                FROM
+                    penghuni_on_rumah
+                GROUP BY
+                    rumahId
             )
-        ) as pr ON r.id = pr.rumahId
-        LEFT JOIN penghuni as p ON pr.penghuniId = p.id;;
-    `);
+    ) as pr ON r.id = pr.rumahId
+    LEFT JOIN penghuni as p ON pr.penghuniId = p.id;`);
     return res.status(200).json(rumah);
   } catch (error) {
     console.log("[GET_RUMAH] " + error);

@@ -45,7 +45,7 @@ function Rumah() {
   });
   return (
     <div>
-      <h1>Daftar Rumah</h1>
+      <h1 className="text-2xl font-bold">Daftar Rumah</h1>
       <div className="float-right">
         <Button
           variant={"outline"}
@@ -62,9 +62,9 @@ function Rumah() {
           <TableRow>
             <TableHead>NO</TableHead>
             <TableHead>Alamat</TableHead>
-            <TableHead>Penghuni</TableHead>
+            <TableHead>Penghuni Terakhir</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Lunas</TableHead>
+            <TableHead>Dihuni</TableHead>
             <TableHead>Aksi</TableHead>
           </TableRow>
         </TableHeader>
@@ -79,20 +79,8 @@ function Rumah() {
                   <TableCell>{rumah.namaPenghuni}</TableCell>
                   <TableCell>{rumah.statusHunian}</TableCell>
                   <TableCell>
-                    <Badge
-                      variant={
-                        rumah.isLunas === "1"
-                          ? "default"
-                          : rumah.isLunas === "0"
-                          ? "destructive"
-                          : "secondary"
-                      }
-                    >
-                      {rumah.isLunas === "1"
-                        ? "Lunas"
-                        : rumah.isLunas === "0"
-                        ? "Belum Lunas"
-                        : "N/A"}
+                    <Badge variant={rumah.menghuni ? "default" : "secondary"}>
+                      {rumah.menghuni ? "Dihuni" : "Kosong"}
                     </Badge>
                   </TableCell>
                   <TableCell>

@@ -136,6 +136,30 @@ export const updatePengeluaran = async (req: Request, res: Response) => {
   }
 };
 
+export const sisaDana = async (req: Request, res: Response) => {
+  try {
+    const totalIuranBulanan = await prisma.iuranBulanan.aggregate({
+      _sum: {
+        nominal: true,
+      },
+    });
+    const totalPengeluaran = await prisma.pengeluaran.aggregate({
+      _sum: {
+        nominal: true,
+      },
+    });
+
+    return res.status(200).json({
+      sisa_dana:
+        (totalIuranBulanan._sum?.nominal || 0) -
+        (totalPengeluaran._sum?.nominal || 0),
+    });
+  } catch (error) {
+    console.log("[SISA_DANA] " + error);
+    return res.sendStatus(500);
+  }
+}
+
 export const deletePengeluaran = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;

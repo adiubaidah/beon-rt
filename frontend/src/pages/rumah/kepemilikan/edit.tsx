@@ -79,6 +79,7 @@ function EditKepemilikan({
       rumahId: 0,
       selesai: undefined,
       statusHunian: "TETAP",
+      menghuni: true,
     },
   });
 
@@ -88,6 +89,7 @@ function EditKepemilikan({
       form.setValue("penghuniId", data.penghuniId);
       form.setValue("mulai", new Date(data.mulai));
       form.setValue("rumahId", data.rumahId);
+      form.setValue("menghuni", data.menghuni);
       form.setValue(
         "selesai",
         data.selesai ? new Date(data.selesai) : undefined
@@ -106,7 +108,7 @@ function EditKepemilikan({
       return (await axiosInstance.put("/kepemilikan/" + data.id, value)).data;
     },
     onSuccess: () => {
-      toast.success(`Kepemilikan berhasil ditambahkan`);
+      toast.success(`Kepemilikan berhasil diedit`);
       setIsOpen(false);
       queryClient.invalidateQueries({
         queryKey: ["kepemilikan", { rumah: rumahId }],
@@ -116,7 +118,7 @@ function EditKepemilikan({
       });
     },
     onError: () => {
-      toast.error("Kepemilikan gagal ditambahkan");
+      toast.error("Kepemilikan gagal diedit");
     },
   });
 
@@ -161,6 +163,33 @@ function EditKepemilikan({
                     <SelectContent>
                       <SelectItem value="TETAP">Tetap</SelectItem>
                       <SelectItem value="KONTRAK">Kontrak</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="menghuni"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status Menghuni</FormLabel>
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value === "1");
+                    }}
+                    value={field.value ? "1" : "0"}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      <SelectItem value="1">Aktif</SelectItem>
+                      <SelectItem value="0">Tidak Aktif</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

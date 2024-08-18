@@ -61,7 +61,9 @@ function Kepemilikan() {
           Jika penghuni adalah <strong>Tetap</strong>, maka harus membayar mulai
           dari dia menetap hingga bulan saat ini
         </li>
-        <li>Terkadang halaman ini tidak ter-refresh, maka harus refresh manual</li>
+        <li>
+          Terkadang halaman ini tidak ter-refresh, maka harus refresh manual
+        </li>
       </ul>
       <div className="float-right">
         <Button
@@ -81,6 +83,7 @@ function Kepemilikan() {
             <TableHead>Status</TableHead>
             <TableHead>Nama Pemilik</TableHead>
             <TableHead>No Telepon</TableHead>
+            <TableHead>Dihuni</TableHead>
             <TableHead>Iuran</TableHead>
             <TableHead>Aksi</TableHead>
           </TableRow>
@@ -109,6 +112,7 @@ function Kepemilikan() {
                 <TableCell>{item.statusHunian}</TableCell>
                 <TableCell>{item.namaPenghuni}</TableCell>
                 <TableCell>{item.noTelepon}</TableCell>
+                <TableCell>{item.menghuni ? "AKTIF" : "TIDAK"}</TableCell>
                 <TableCell>
                   <Badge
                     variant={item.isLunas === "1" ? "default" : "destructive"}
@@ -116,6 +120,7 @@ function Kepemilikan() {
                     {item.isLunas === "1" ? "Lunas" : "Belum Lunas"}
                   </Badge>
                 </TableCell>
+
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger>

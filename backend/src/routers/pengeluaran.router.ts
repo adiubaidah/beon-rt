@@ -6,6 +6,7 @@ import {
   updatePengeluaran,
   deletePengeluaran,
   rekapPengeluaranTahun,
+  sisaDana,
 } from "../controllers/pengeluaran.controller";
 
 export default (router: Router) => {
@@ -18,4 +19,5 @@ export default (router: Router) => {
     .route("/pengeluaran/:id")
     .put(auth, updatePengeluaran)
     .delete(auth, deletePengeluaran);
+  router.get('/sisa-dana', auth, sisaDana);
 };

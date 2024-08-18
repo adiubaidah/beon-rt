@@ -27,6 +27,7 @@ export const getAllKepemilikan = async (req: Request, res: Response) => {
     pr.statusHunian,
     pr.mulai,
     pr.selesai,
+    pr.menghuni,
     CASE
         WHEN pr.statusHunian = 'KONTRAK' THEN
             CASE
@@ -140,7 +141,8 @@ export const createKepemilikan = async (req: Request, res: Response) => {
 export const updateKepemilikan = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { rumahId, penghuniId, statusHunian, mulai, selesai } = req.body;
+    const { rumahId, penghuniId, statusHunian, mulai, selesai, menghuni } =
+      req.body;
 
     if (
       !rumahId ||
@@ -161,6 +163,7 @@ export const updateKepemilikan = async (req: Request, res: Response) => {
         ...(statusHunian === "KONTRAK" && {
           selesai,
         }),
+        menghuni,
         rumah: {
           connect: {
             id: rumahId,

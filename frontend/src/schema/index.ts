@@ -26,6 +26,7 @@ export const kepemilikanSchema = z.object({
   mulai: z.date(),
   selesai: z.date().optional(),
   statusHunian: z.enum(["KONTRAK", "TETAP"]),
+  menghuni: z.boolean().default(true),
 });
 
 export const jenisIuranSchema = z.object({
@@ -38,13 +39,12 @@ export const iuranBulananSchema = z.object({
   penghuniOnRumahId: z.number(),
   tanggalBayar: z.date(),
   jenisIuranId: z.number(),
-  setahun: z.boolean().default(false)
+  setahun: z.boolean().default(false),
 });
-
 
 export const pengeluaranSchema = z.object({
   nama: z.string().min(2, { message: "Nama diperlukan" }),
   nominal: z.number().min(0, { message: "Nominal diperlukan" }),
   tanggal: z.date(),
   keterangan: z.string().optional(),
-})
+});

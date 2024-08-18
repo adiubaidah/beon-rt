@@ -65,6 +65,7 @@ model PenghuniOnRumah {
   mulai        DateTime
   selesai      DateTime?
   statusHunian StatusHunian
+  menghuni     Boolean        @default(true)
   iuaran       IuranBulanan[]
 
   @@map("penghuni_on_rumah")

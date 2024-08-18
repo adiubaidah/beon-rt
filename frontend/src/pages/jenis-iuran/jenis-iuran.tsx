@@ -47,7 +47,8 @@ function JenisIuran() {
   });
   return (
     <div>
-      <h1>Daftar Penghuni</h1>
+      <h1 className="text-2xl font-bold">Daftar Jenis Iuran</h1>
+      <p>Semua iuran wajib dibayar setiap bulan</p>
       <div className="float-right">
         <Button
           variant={"outline"}
