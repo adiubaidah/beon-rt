@@ -48,7 +48,9 @@ export const rekapPengeluaranTahun = async (req: Request, res: Response) => {
       `);
 
     const pengeluranPerBulan = months.map((month, index) => {
-      const data = pengeluaran.find((item: any) => item.month === index + 1);
+      const data = pengeluaran.find(
+        (item: any) => Number(item.month) === index + 1
+      );
       return {
         month,
         total_nominal: data ? Number(data.total_nominal) : 0,
@@ -84,7 +86,7 @@ export const createPengeluaran = async (req: Request, res: Response) => {
     if (
       totalIuranBulanan._sum?.nominal !== null &&
       totalIuranBulanan._sum?.nominal <
-      (totalPengeluaran._sum?.nominal || 0) + nominal
+        (totalPengeluaran._sum?.nominal || 0) + nominal
     ) {
       return res.status(400).json({
         message: "Nominal pengeluaran melebihi total iuran bulanan",

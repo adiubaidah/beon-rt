@@ -27,6 +27,7 @@ import {
 } from "~/schema/type";
 import AddJenisIuran from "./add";
 import DeleteJenisIuran from "./delete";
+import EditJenisIuran from "./edit";
 
 type DataModal = {
   data?: JenisIuranType;
@@ -49,6 +50,7 @@ function JenisIuran() {
       <h1>Daftar Penghuni</h1>
       <div className="float-right">
         <Button
+          variant={"outline"}
           onClick={() => {
             setOpenModal(true);
             setDataModal({ operation: "create" });
@@ -58,7 +60,7 @@ function JenisIuran() {
         </Button>
       </div>
 
-      <Table>
+      <Table className="mt-4">
         <TableHeader>
           <TableRow>
             <TableHead>NO</TableHead>
@@ -130,6 +132,14 @@ function JenisIuran() {
         setIsOpen={setOpenModal}
         operation={dataModal.operation}
       />
+
+      <EditJenisIuran
+        data={dataModal.data as JenisIuranType}
+        isOpen={openModal}
+        setIsOpen={setOpenModal}
+        operation={dataModal.operation}
+      />
+
       <DeleteJenisIuran
         data={dataModal.data as JenisIuranType}
         isOpen={openModal}

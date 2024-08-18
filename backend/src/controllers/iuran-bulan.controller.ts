@@ -78,8 +78,11 @@ export const rekapIuranBulanTahun = async (req: Request, res: Response) => {
     ORDER BY
         month;
       `);
+    console.log(iuranBulan);
     const rekap = months.map((month: any, index) => {
-      const data = iuranBulan.find((item: any) => item.month === index + 1);
+      const data = iuranBulan.find(
+        (item: any) => Number(item.month) === index + 1
+      );
       return {
         month,
         total_nominal: data ? Number(data.total_nominal) : 0,

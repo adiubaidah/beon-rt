@@ -117,7 +117,6 @@ function AddIuran({
       onOpenChange={() => {
         form.reset({
           jenisIuranId: 0,
-          penghuniOnRumahId: 0,
           tanggalBayar: new Date(),
           setahun: false,
         });

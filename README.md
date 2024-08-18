@@ -5,6 +5,9 @@ Projek ini dapat diakses di [beon-rt.adiiskandar.my.id](https://beon-rt.adiiskan
 * username : admin
 * password : password
 
+## Gambar ERD
+<a href="https://drive.google.com/uc?export=view&id=1Bukqxhdn0Vys96_e0sadg0NlJXOEjhFI"><img src="https://drive.google.com/uc?export=view&id=1Bukqxhdn0Vys96_e0sadg0NlJXOEjhFI" style="width: 650px; max-width: 100%; height: auto" title="Click to enlarge picture" />
+
 ## Instalasi
 
 * Lakukan Copy Repository dari github
@@ -55,9 +58,9 @@ npm run dev
 > Pastikan backend berjalan sesuai port
 
 ### Frontend
-* Masuk ke folder backend
+* Masuk ke folder frontend
 ```
-cd backend
+cd frontend
 ```
 * Edit file .env-example, dan rename menjadi .env, serta isi
 ```

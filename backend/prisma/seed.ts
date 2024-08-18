@@ -18,6 +18,7 @@ async function main() {
     },
   });
 
+
   await prisma.jenisIuran.createMany({
     data: [
       {

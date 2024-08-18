@@ -71,7 +71,7 @@ function AddJenisIuran({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Tambah Penghuni</DialogTitle>
+          <DialogTitle>Tambah Jenis Iuran</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -85,7 +85,7 @@ function AddJenisIuran({
                 <FormItem>
                   <FormLabel>Nama</FormLabel>
                   <FormControl>
-                    <Input placeholder="Wakimin" {...field} />
+                    <Input placeholder="Listrik" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
